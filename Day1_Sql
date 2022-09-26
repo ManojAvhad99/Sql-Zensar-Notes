@@ -454,14 +454,14 @@ Function:
 --------------
 char function
  syntax:   lower(str), upper(str), initcap(str)
-    
+
 select lower('abc dEf GHI'),  upper('abc dEf GHI'), initcap('abc dEf GHI')
 from dual;
-    
+
 
 substr:
  syntax: substr(str, position, [length])
- 
+
 select substr('abcdefgh',3) from dual;   --cdefgh
 select substr('abcdefgh',3,2) from dual;  -- cd
 select substr('abcdefgh',-3) from dual; --fgh
@@ -470,13 +470,13 @@ select substr('abcdefgh',-6,4) from dual; --cdef
 
 INSTR:
  syntax: instr(str, 'searching str', [position],[occurence])
- 
+
  select instr('abcd abc aaa bbb ccc d','b') from dual; --2
  select instr('abcd abc aaa bbb ccc d','b', 4) from dual; --7
  select instr('abcd abc aaa bbb ccc d','b', 4, 2) from dual; --14
  select instr('abcd abc aaa bbb ccc d','e') from dual; --0
- 
- 
+
+
 LPAD(str,length,padding str), lpad(str,length,padding str)
 
 select lpad('abc',7,'*') from dual; --****abc
@@ -522,25 +522,5 @@ where rownum <= 4;
  *****
   ***
    *
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   
+   
