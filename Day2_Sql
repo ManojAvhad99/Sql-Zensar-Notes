@@ -1,0 +1,282 @@
+number function:
+1. mod(num1, num2)
+2. round(num1, rounding_number)
+3. trunc(num1, rounding_number)
+4. ceil(num)
+5. floor(num)
+6. abs(num)
+
+
+select ceil(10.5), floor(10.5), abs(-10.5) from dual;
+
+select mod(10,3) from dual;
+
+select round(19845.47394, 2) from dual; --19845.47
+select round(19845.47394, 3) from dual; --19845.474
+
+select trunc(19845.47394, 2) from dual; --19845.47
+select trunc(19845.47394, 3) from dual; --19845.473
+
+
+select round(19845.47394, -2) from dual; --19800
+select round(19845.47394, -3) from dual; --20000
+
+select trunc(19845.47394, -2) from dual; --19800
+select trunc(19845.47394, -3) from dual; --19000
+
+
+--date function
+-- DD-MON-RR
+select sysdate from dual;
+months_between(date1, date2)
+add_months(date, num)
+last_day(date)
+next_day(date, 'day')
+
+
+1. we can add or substract the number from date
+select sysdate+1, sysdate-3 from dual;
+
+2. we can substract 2 dates which will no of days between two days
+select last_name, hire_date, trunc(sysdate-hire_date) as no_of_days
+from employees;
+
+select last_name, hire_date, trunc(sysdate-hire_date) as no_of_days,
+trunc((sysdate-hire_date)/30) as no_of_month,
+trunc(months_between(sysdate, hire_date)) as no_of_months1
+from employees;
+
+select add_months(sysdate,4) from dual;
+
+
+select last_name,  hire_date,last_day(hire_date)
+from employees;
+
+
+select next_day(sysdate,'mon') from dual;
+
+
+
+select trunc(sysdate) from dual;
+
+
+--matching the date excluding time
+select * from emp
+where trunc(hire_date) = trunc(sysdate);
+
+
+
+
+
+--conversion function
+1. to_char
+2. to_date
+3. to_number
+
+
+
+Number      char      Date
+
+select '1'+ 2  from dual; --implicit conversion
+
+1. to_char
+
+select to_char(sysdate,'dd-Mon-yyyy hh:mi:ss PM') from dual;
+select to_char(sysdate,'dd-Mon-yyyy hh24:mi:ss') from dual;
+
+select to_char(sysdate,'yyyy')+1000 from dual;
+
+
+select to_date('1-02-2100','dd-mm-yyyy') + 1 from dual;
+
+
+--list of employee hired on tuesday
+select last_name, hire_date, to_char(hire_date,'Dy')
+from employees
+where to_char(hire_date,'DY') ='TUE';
+
+
+
+--general function
+nvl(exp1, exp2) when exp1 is null then exp2
+   rule: both exp1 and exp2 should be of same type
+   
+coalesce(exp1, exp2, exp3,......) if exp1 is null then exp2, if exp1 and exp2 is null then exp3
+  rule: all exp should of same type
+  
+nvl2(exp1, exp2, exp3)  if exp1 is not null then exp2 else exp1
+  rule: exp2 and exp3 should be of same type
+case
+decode
+
+--nvl
+select last_name, salary, commission_pct, nvl(to_char(commission_pct),'No Comm'),
+salary+ salary*nvl(commission_pct,0) as net_sal
+from employees;
+
+
+--nvl2
+select last_name, salary, commission_pct, nvl2(commission_pct,'Comm','No Comm'),
+salary+ salary*nvl(commission_pct,0) as net_sal
+from employees;
+
+
+--case
+
+select last_name,salary, department_id
+from employees
+order by 3
+
+select last_name, salary, department_id,
+  case when department_id=10 then salary*1.1
+       when department_id=20 then salary*1.2
+       when department_id=30 then salary*1.3
+       else salary
+  end as new_salary
+from employees
+order by 3;
+
+
+select last_name, salary, department_id,
+  case department_id when 10 then salary*1.1
+       when 20 then salary*1.2
+       when 30 then salary*1.3
+       else salary
+  end as new_salary
+from employees
+order by 3;
+
+
+select last_name, salary, department_id,
+decode( department_id ,10 ,salary*1.1 ,20 ,salary*1.2, 30 ,salary*1.3 ,salary) as new_salary
+from employees
+order by 3;
+
+select decode(1, 2,3, 4,1,  1,3,  4,2,  1) from dual;
+
+
+
+--group function/aggregate function/multiple row function
+
+1. sum
+2. min
+3. max
+4. avg
+5. count
+
+Rule:
+1. group function not allow null
+2. execution flow=>  from   -> where  ->group by   -> having -> select  -> order by
+3. the columns with the group funtion must be in group by clause
+4. we cannot restrict group using where clause
+5. to restrict row use where clause and to restrict group use group by clause.
+
+select sum(salary), min(salary), max(salary), avg(salary), sum(salary)/107,
+       count(salary)
+from employees;
+
+
+select avg(nvl(commission_pct,0)), sum(commission_pct)/107,
+       count(commission_pct)
+from employees;
+
+
+--dept wise sum of salary
+
+select department_id, sum(salary) , count(*)
+from employees
+group by department_id
+having sum(salary)>100000;
+
+
+
+
+select col1, col2, col3, sum(col4)
+from table_name
+group by col1, col2, col3;
+
+
+
+--to find the employees who name is repeated or more than one emp with same name
+
+select last_name
+from employees
+group by last_name
+having count(*)>1;
+
+
+--no of manager
+
+select count(distinct manager_id)
+from employees;
+
+
+select coalesce(null,null,null,4) from dual;
+
+select coalesce(department_id, manager_id, comm, salary)
+
+1000
+2000
+3000
+-
+4000
+-----
+10000/5 =2000
+
+avg(nvl(salary,0)) = 2000;
+
+
+
+
+--subquery
+--list of emp whose salary > Abel's salary
+
+select salary from employees
+where last_name ='Abel';
+
+select last_name, salary
+from employees
+where salary>11000;
+
+select last_name, salary
+from employees
+where salary>(select salary from employees
+               where last_name ='Abel'
+              );
+              
+select last_name, salary
+from employees
+where (select salary from employees
+               where last_name ='Abel'
+              )<salary;  --not recommended
+
+--list of emp whose salary > Abel's salary and working with kochhar
+
+
+select last_name, salary
+from employees
+where salary>(select salary from employees
+               where last_name ='Abel' 
+              )
+and department_id = (select department_id from employees
+                     where last_name ='Kochhar');
+                     
+                    
+                    
+--rule of subquery
+ 1. don't use order by in subquery except ton-n analysis.
+ 2. for single row subquery use single row operator
+    and for multiple row subquery use multiple row operator.
+
+
+
+Multiple row opreator: IN, ANY, ALL
+
+
+select last_name, salary
+from employees
+where salary> all(select salary from employees   --3200 and 9000
+               where last_name ='Grant'
+              );
+
+
