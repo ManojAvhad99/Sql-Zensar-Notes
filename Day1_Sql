@@ -1,1 +1,546 @@
+--structure of table
+desc employees;
+desc departments;
+
+--data in the table
+select * from employees; --107 rows
+select * from departments;
+select * from locations;
+select * from countries;
+select * from regions;
+
+
+
+date format : DD-MON-RR
+
+20-sep-2022
+96(RR) => 1996
+96(YY) => 2096
+
+20-sep-2055
+99(RR) => 2096
+96(YY) => 2096
+
+Rule:
+1. Sql is not case sensitive.
+2. Queries can be written in multiple lines.
+3. clause=>   From
+4. use quote operator q'[]' when single quote are present as literal.
+5. string as case sensitive and date are format sensitive.
+6. don't use any operator with null except IS
+
+
+select *
+from  employees;
+
+--Prog 1. WAQ to fetch id, name and salary 
+select employee_id, first_name, last_name,salary
+from employees;
+
+select employee_id, first_name||' '||last_name as name,salary
+from employees;
+
+--WAQ for below output
+/*
+The salary of King is 24000 
+The salary of Kochhar is 17000
+*/
+
+select 'The salary of '||last_name||' is '||salary  details
+from employees;
+
+/*
+King's salary is 24000
+Kochhar's salary is 17000
+*/
+
+select last_name||''s salary is '||salary  from employees; --this will not work
+select last_name||q'['s salary is ]'||salary from employees;
+
+
+--restrict the row
+select *|col1, col2....
+from table_name
+where <condition>
+
+condtional operator
+>
+>=
+<
+<=
+=
+!=     <>    ^=
+IN
+Between and
+
+
+Logical operator
+and
+or 
+not
+
+--WAQ to fetch employee whose salary >10000
+select last_name,salary
+from employees
+where salary>12000;
+
+--WAQ to fetch employees working in dept 20
+
+select last_name,salary, department_id
+from employees
+where department_id = 20;
+
+
+--WAQ to fetch employees working in dept 20 and 30
+
+select last_name,salary, department_id
+from employees
+where department_id = 20 or department_id=30;
+
+
+--WAQ to fetch employees not working in dept 50 and 80
+
+select last_name,department_id,salary
+from employees
+where department_id != 50 and department_id != 80
+
+
+--WAQ to fetch employees working in dept 20 ,10,30,60
+
+select last_name,salary, department_id
+from employees
+where department_id in (10,20,30,60);
+
+
+
+--WAQ to fetch employees not working in dept 50, 80,60,70
+
+select last_name,department_id,salary
+from employees
+where department_id not in (50,80,60,70);
+
+
+--create a table
+--insert the data
+
+create table test1
+(col1 number,
+col2 varchar2(20)
+);
+
+select * from test1;
+
+insert into test1 values (1,'Dummy data');
+
+
+
+--waq to find the emp salary >=6000 and salary <=8000
+select last_name,salary
+from employees
+where salary >=6000 and salary<=8000;   
+
+id   sal
+1     7000  y
+2     3000 
+3     9000
+
+
+select last_name,salary
+from employees
+where salary between 6000 and 8000;
+
+
+--waq to find the employees salary <3000 and salary>15000
+
+select last_name,salary
+from employees
+where salary <3000 or salary>15000;  
+
+select last_name,salary
+from employees
+where salary not between 3000 and 15000;
+
+
+
+cond1  and cond2  =>
+and mean when both cond true then true else false;
+
+or
+mean both condtion false then false else true
+if any one condtion is true then true
+
+
+
+select last_name,salary,hire_date
+from employees
+where last_name = 'King';
+
+select last_name,salary,hire_date
+from employees
+where hire_date = '17-jun-03';
+
+--waq to find employee having no dept
+select last_name, department_id
+from employees
+where department_id IS null;
+
+
+--Like operator
+%  => zero or many
+_  => exact one
+
+
+--name start with letter A
+select last_name
+from employees
+where last_name like 'A%';
+
+
+--name end with letter a
+select last_name
+from employees
+where last_name like '%a';
+
+--name with secode letter as a
+
+
+
+
+
+
+
+
+
+--waq to find emp having comm
+
+
+Select 'Break for 15 min ' from  dual;
+
+select 2+3 from dual;
+
+select sysdate from dual;
+
+
+--waq to print name,salary and annual salary
+select last_name, salary, salary *12 as annsal
+from employees;
+
+
+--waq to print name,salary and annual salary whose annsal >120000
+
+select last_name, salary, salary *12 as annsal
+from employees
+where salary *12 >120000;
+
+
+from   -> where  -> select  -> order by
+
+sorting:
+
+select last_name,department_id, salary
+from employees
+order by salary desc;
+
+
+select last_name,department_id, salary
+from employees
+order by department_id desc, salary desc;
+
+
+
+select last_name, salary, salary *12 as annsal
+from employees
+where salary *12 >120000
+order by annsal;
+
+select last_name, salary, salary *12 as annsal
+from employees
+where salary *12 >120000
+order by 1;
+
+
+
+--create a table
+--insert the data
+
+create table test1
+(col1 number,
+col2 varchar2(20)
+);
+
+select * from test1;
+
+insert into test1 values (1,'Dummy data');
+
+
+
+--waq to find the emp salary >=6000 and salary <=8000
+select last_name,salary
+from employees
+where salary >=6000 and salary<=8000;   
+
+id   sal
+1     7000  y
+2     3000 
+3     9000
+
+
+select last_name,salary
+from employees
+where salary between 6000 and 8000;
+
+
+--waq to find the employees salary <3000 and salary>15000
+
+select last_name,salary
+from employees
+where salary <3000 or salary>15000;  
+
+select last_name,salary
+from employees
+where salary not between 3000 and 15000;
+
+
+
+cond1  and cond2  =>
+and mean when both cond true then true else false;
+
+or
+mean both condtion false then false else true
+if any one condtion is true then true
+
+
+
+select last_name,salary,hire_date
+from employees
+where last_name = 'King';
+
+select last_name,salary,hire_date
+from employees
+where hire_date = '17-jun-03';
+
+--waq to find employee having no dept
+select last_name, department_id
+from employees
+where department_id IS null;
+
+
+--Like operator
+%  => zero or many
+_  => exact one
+
+select last_name
+from employees
+where last_name like 'A%'
+
+
+
+
+
+
+
+
+--waq to find emp having comm
+
+
+Select 'Break for 15 min ' from  dual;
+
+select 2+3 from dual;
+
+select sysdate from dual;
+
+
+--waq to print name,salary and annual salary
+select last_name, salary, salary *12 as annsal
+from employees;
+
+
+--waq to print name,salary and annual salary whose annsal >120000
+
+select last_name, salary, salary *12 as annsal
+from employees
+where salary *12 >120000;
+
+
+from   -> where  -> select  -> order by
+
+sorting:
+
+select last_name,department_id, salary
+from employees
+order by salary desc;
+
+
+select last_name,department_id, salary
+from employees
+order by department_id desc, salary desc;
+
+
+
+select last_name, salary, salary *12 as annsal
+from employees
+where salary *12 >120000
+order by annsal;
+
+select last_name, salary, salary *12 as annsal
+from employees
+where salary *12 >120000
+order by 1;
+
+
+
+--Like operator
+%  => zero or many
+_  => exact one
+
+
+--name start with letter A
+select last_name
+from employees
+where last_name like 'A%';
+
+
+--name end with letter a
+select last_name
+from employees
+where last_name like '%a';
+
+--name with secode letter as a
+
+select last_name
+from employees
+where last_name like '_a%';
+
+
+--name contain letter a  and e 
+  maven
+  bear
+
+select last_name
+from employees
+where last_name like '%a%e%'
+or last_name like '%e%a%';
+
+select last_name
+from employees
+where last_name like '%a%'
+and last_name like '%e%';
+
+
+--name contain letter a and only have 3 char in their name
+sam, rma
+
+select last_name
+from employees
+where last_name like '%a%'
+and LENGTH(last_name)=3;
+
+select last_name
+from employees
+where last_name like '%a%'
+and last_name like '___';
+
+
+select last_name
+from employees
+where last_name like '_a_'
+or last_name like 'a__'
+or last_name like '__a';
+
+
+
+
+Function:
+--------------
+char function
+ syntax:   lower(str), upper(str), initcap(str)
+    
+select lower('abc dEf GHI'),  upper('abc dEf GHI'), initcap('abc dEf GHI')
+from dual;
+    
+
+substr:
+ syntax: substr(str, position, [length])
+ 
+select substr('abcdefgh',3) from dual;   --cdefgh
+select substr('abcdefgh',3,2) from dual;  -- cd
+select substr('abcdefgh',-3) from dual; --fgh
+select substr('abcdefgh',-3,2) from dual; --fg
+select substr('abcdefgh',-6,4) from dual; --cdef
+
+INSTR:
+ syntax: instr(str, 'searching str', [position],[occurence])
+ 
+ select instr('abcd abc aaa bbb ccc d','b') from dual; --2
+ select instr('abcd abc aaa bbb ccc d','b', 4) from dual; --7
+ select instr('abcd abc aaa bbb ccc d','b', 4, 2) from dual; --14
+ select instr('abcd abc aaa bbb ccc d','e') from dual; --0
+ 
+ 
+LPAD(str,length,padding str), lpad(str,length,padding str)
+
+select lpad('abc',7,'*') from dual; --****abc
+select rpad('abc',7,'*') from dual; --abc*****
+
+
+TRIM(str)
+select trim('  abc    def   ') from dual;
+select trim('a' from 'aaabbbbdddaaaabbbdddaaa') from dual; --bbbbdddaaaabbbddd
+
+select * from employees
+where trim('  abc    def   ') = 'abc    def';
+
+
+length(str)
+
+select length('abc') from dual; --3
+select length(null) from dual; --null
+
+
+desc employees
+
+select last_name,salary,rownum  --rownum is a psuedo column
+from employees
+where rownum <= 4;
+
+
+
+*
+**
+***
+****
+
+   *
+  ***
+ *****
+*******
+
+   *
+  ***
+ *****
+*******
+ *****
+  ***
+   *
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
