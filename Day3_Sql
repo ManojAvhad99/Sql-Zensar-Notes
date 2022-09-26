@@ -1,0 +1,406 @@
+--JOIN
+desc employees;
+desc departments;
+
+Rule:
+1. if column is present in both the table, the qualifier is mandatory
+2. column part of USING clause cannot have qualifier
+3. if joining column name is not having same name, the join using on clause
+
+Type of Join
+1. INNER join
+2. Outer join
+    Left Outer join
+    Right Outer join
+    Full Outer join
+    
+3. self join
+4. equi/non equi join
+
+--join with using clause
+select last_name, department_id,department_name
+from employees join departments
+using(department_id);
+
+
+select last_name, department_id,department_name, 
+employees.manager_id
+from employees join departments
+using(department_id);
+
+select e.last_name, e.salary,department_id, d.department_name, 
+e.manager_id
+from employees e join departments d
+using(department_id);
+
+
+
+
+--join with on clause
+select e.last_name, e.salary,d.department_id,
+d.department_name, 
+e.manager_id
+from employees e join departments d
+on e.department_id = d.department_id;
+
+
+--outer join
+
+select e.employee_id,e.last_name,d.department_id,d.department_name 
+from employees e join departments d
+on e.department_id = d.department_id;  --inner join
+
+select e.employee_id,e.last_name,d.department_id,d.department_name 
+from employees e left outer join departments d
+on e.department_id = d.department_id;  --left outer join
+
+select e.employee_id,e.last_name,d.department_id,d.department_name 
+from employees e right outer join departments d
+on e.department_id = d.department_id;  --rigth outer join
+
+
+select e.employee_id,e.last_name,d.department_id,d.department_name 
+from employees e full outer join departments d
+on e.department_id = d.department_id;  --full outer join
+
+
+
+--self join
+select e.employee_id, e.last_name, e.manager_id, m.last_name as manager_name
+from employees e join employees m 
+on e.manager_id = m.employee_id
+order by 1;
+
+
+--to find name and colleage name
+for department 10,20,30
+
+
+
+a  10
+b  10
+c  10
+
+name  col_name
+a       b
+a       c
+b       a
+b       c
+c       a
+c       b
+
+
+select e.employee_id, e.last_name, e.department_id, 
+c.employee_id as colleage_id,
+c.last_name as colleage_name
+from employees e join employees c
+on e.department_id = c.department_id
+where e.department_id in (10,20,30)
+and e.employee_id != c.employee_id
+order by 1;
+
+
+
+--join with more than 2 tables
+select e.employee_id,e.last_name,d.department_id,d.department_name,
+l.city, c.country_name
+from employees e join departments d
+on e.department_id = d.department_id
+join locations l
+on d.location_id = l.location_id
+join countries c
+on l.country_id = c.country_id;
+
+
+
+
+create table job_grades(minsal number, maxsal number, grade char);
+insert into job_grades values (0,2000,'A');
+insert into job_grades values (2001,5000,'B');
+insert into job_grades values (5001,10000,'C');
+insert into job_grades values (10001,15000,'D');
+insert into job_grades values (15001,100000,'E');
+
+select * from job_grades
+
+
+--non equi join
+select e.employee_id, e.last_name,e.salary, j.grade
+from employees e join job_grades j
+on e.salary between j.minsal and j.maxsal;
+
+
+
+--join with using clause
+select last_name, department_id,department_name
+from employees join departments
+using(department_id);
+
+
+select last_name, department_id,department_name, 
+employees.manager_id
+from employees join departments
+using(department_id);
+
+select e.last_name, e.salary,department_id, d.department_name, 
+e.manager_id
+from employees e join departments d
+using(department_id);
+
+
+
+
+--join with on clause
+select e.last_name, e.salary,d.department_id,
+d.department_name, e.manager_id
+from employees e join departments d
+on e.department_id = d.department_id;
+
+select e.last_name, e.salary,d.department_id,
+d.department_name, e.manager_id
+from employees e , departments d
+where e.department_id = d.department_id;  --ansi standard
+
+
+
+--outer join
+
+select e.employee_id,e.last_name,d.department_id,d.department_name 
+from employees e join departments d
+on e.department_id = d.department_id;  --inner join
+
+
+select e.employee_id,e.last_name,d.department_id,d.department_name 
+from employees e left outer join departments d
+on e.department_id = d.department_id;  --left outer join
+
+select e.employee_id,e.last_name,d.department_id,d.department_name 
+from employees e , departments d
+where e.department_id = d.department_id(+);  --left outer join with ansi standard
+
+select e.employee_id,e.last_name,d.department_id,d.department_name 
+from employees e right outer join departments d
+on e.department_id = d.department_id;  --rigth outer join
+
+select e.employee_id,e.last_name,d.department_id,d.department_name 
+from employees e , departments d
+where e.department_id(+) = d.department_id;  --rigth outer join with ansi standard
+
+
+select e.employee_id,e.last_name,d.department_id,d.department_name 
+from employees e full outer join departments d
+on e.department_id = d.department_id;  --full outer join
+
+select e.employee_id,e.last_name,d.department_id,d.department_name 
+from employees e , departments d
+where e.department_id(+) = d.department_id(+);  --full outer join (not allowed in ansi standard)
+
+
+--self join
+select e.employee_id, e.last_name, e.manager_id, m.last_name as manager_name
+from employees e join employees m 
+on e.manager_id = m.employee_id
+order by 1;
+
+select e.employee_id, e.last_name, e.manager_id, m.last_name as manager_name
+from employees e , employees m 
+where  e.manager_id = m.employee_id
+order by 1;
+
+--to find name and colleage name
+for department 10,20,30
+
+
+
+a  10
+b  10
+c  10
+
+name  col_name
+a       b
+a       c
+b       a
+b       c
+c       a
+c       b
+
+
+select e.employee_id, e.last_name, e.department_id, 
+c.employee_id as colleage_id,
+c.last_name as colleage_name
+from employees e join employees c
+on e.department_id = c.department_id
+where e.department_id in (10,20,30)
+and e.employee_id != c.employee_id
+order by 1;
+
+select e.employee_id, e.last_name, e.department_id, 
+c.employee_id as colleage_id,
+c.last_name as colleage_name
+from employees e , employees c
+where e.department_id = c.department_id
+and e.department_id in (10,20,30)
+and e.employee_id != c.employee_id
+order by 1;
+
+
+
+--join with more than 2 tables
+select e.employee_id,e.last_name,d.department_id,d.department_name,
+l.city, c.country_name
+from employees e join departments d
+on e.department_id = d.department_id
+join locations l
+on d.location_id = l.location_id
+join countries c
+on l.country_id = c.country_id;
+
+select e.employee_id,e.last_name,d.department_id,d.department_name,
+l.city, c.country_name
+from employees e , departments d, locations l, countries c
+where e.department_id = d.department_id
+and d.location_id = l.location_id
+and l.country_id = c.country_id;
+
+
+
+
+create table job_grades(minsal number, maxsal number, grade char);
+insert into job_grades values (0,2000,'A');
+insert into job_grades values (2001,5000,'B');
+insert into job_grades values (5001,10000,'C');
+insert into job_grades values (10001,15000,'D');
+insert into job_grades values (15001,100000,'E');
+
+select * from job_grades
+
+
+--non equi join
+select e.employee_id, e.last_name,e.salary, j.grade
+from employees e join job_grades j
+on e.salary between j.minsal and j.maxsal;
+
+
+
+--waq to find the list of employees working in city Toronto
+
+select e.employee_id,e.last_name
+from employees e join departments d
+on e.department_id = d.department_id
+join locations l
+on d.location_id = l.location_id
+where l.city='Toronto';
+
+--query with Ansi standard
+
+
+--cross join
+select count(*)
+from employees e cross join departments d;
+
+select count(*)
+from employees e , departments d;
+
+--NATURAL JOIN
+
+select last_name, salary,department_id,
+department_name, manager_id
+from employees NATURAL join departments d;
+
+select last_name, salary,department_id,
+department_name, manager_id
+from employees  join departments d
+using(department_id,manager_id)
+
+
+--set
+
+a = {1,2,3,4,5,4,5,6}
+b = {2,4,4,6,6,8,10,12}
+
+a Union b = { 1,2,3,4,5,6,8,10,12};
+
+a intersect b  ={2, 3,6}
+
+a minus b  = { 1,3,5}
+b minus a ={8,10,12}
+
+a union all b ={1,2,3,4,5,4,5,6, 2,4,4,6,6,8,10,12};
+
+
+create table math_student(
+roll_no number, name varchar2(20));
+
+create table bio_student(
+roll_no number, name varchar2(20));
+
+insert into math_student values (1,'Jack');
+insert into math_student values (2,'John');
+insert into math_student values (3,'Sam');
+insert into math_student values (4,'Kate');
+insert into math_student values (5,'King');
+
+
+insert into bio_student values (3,'Sam');
+insert into bio_student values (4,'Kate');
+insert into bio_student values (6,'Abel');
+insert into bio_student values (7,'Grant');
+insert into bio_student values (8,'Kochhar');
+insert into bio_student values (9,'Marvis');
+
+select * from math_student;
+select * from bio_student;
+
+--all student from math and bio
+select  roll_no, name from math_student
+union
+select roll_no, name from bio_student;
+
+
+select  name, roll_no from math_student
+union
+select name, roll_no from bio_student
+order by roll_no desc;
+
+--student studying both math and bio
+select  roll_no, name from math_student
+intersect
+select roll_no, name from bio_student;
+
+
+--student studying only bio
+select roll_no, name from bio_student
+minus
+select  roll_no, name from math_student;
+
+
+
+select  roll_no, name from math_student
+union
+select roll_no, name from bio_student
+union
+select employee_id, last_name from employees;
+
+
+select  from (
+select  roll_no, name from math_student
+union 
+select roll_no, name from bio_student
+);
+
+
+--list of employee_id who is not a manager
+
+
+select employee_id from employees
+minus
+select manager_id from employees;
+
+select employee_id from employees
+where employee_id not in (select manager_id from employees); --no row selected as manager id is null for one emp
+
+select employee_id from employees
+where employee_id not in (select manager_id from employees where manager_id is not null);
+
+select employee_id from employees
+where employee_id not in (select nvl(manager_id,-1) from employees);
